@@ -5,9 +5,27 @@ import { getProjects } from "../../services/project.service";
 import { Project } from "../../types/project";
 import { createProject } from "../../services/project.service";
 
+type User = {
+  id: string;
+  email: string;
+  organizationName: string;
+};
+
 export default function DashboardPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [projectName, setProjectName] = useState("");
+  const [user] = useState<User | null>(() => {
+    if (typeof window !== "undefined") {
+      const storedUser = localStorage.getItem("user");
+
+      try {
+        return storedUser ? JSON.parse(storedUser) : null;
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  });
 
   const handleCreateProject = async () => {
     if (!projectName) return;
@@ -39,7 +57,18 @@ export default function DashboardPage() {
     <div className="max-w-5xl mx-auto p-8">
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-white">Dashboard</h1>
+        <div className="mb-8">
+  <h1 className="text-3xl font-bold text-white">Dashboard</h1>
+
+  <div className="mt-4 inline-flex items-center gap-3 bg-gray-900 px-5 py-3 rounded-lg border border-gray-700">
+    <span className="text-base text-gray-400">
+      Organization
+    </span>
+    <span className="text-lg font-semibold text-white">
+      {user?.organizationName}
+    </span>
+  </div>
+</div>
 
         <button
           onClick={() => {

@@ -19,6 +19,7 @@ export default function LoginPage() {
       console.log("Login success:", data);
 
       localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
 
       router.push("/dashboard");
     } catch {

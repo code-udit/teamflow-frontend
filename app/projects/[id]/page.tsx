@@ -132,9 +132,16 @@ export default function ProjectPage() {
         </button>
       </div>
 
-      <h2 className="text-lg text-gray-400 mb-6">
-        {project ? project.name : "Loading project..."}
-      </h2>
+      <div className="mb-6">
+  <div className="inline-flex items-center gap-3 bg-gray-900 px-5 py-3 rounded-lg border border-gray-700">
+    <span className="text-base text-gray-400">
+      Project
+    </span>
+    <span className="text-lg font-semibold text-white">
+      {project ? project.name : "Loading..."}
+    </span>
+  </div>
+</div>
 
       <div className="flex gap-2 mt-4 mb-4">
         <input
