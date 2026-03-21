@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { registerUser } from "../../services/auth.service";
 import { useRouter } from "next/navigation";
 
@@ -13,19 +13,21 @@ export default function RegisterPage() {
 
   const [loading, setLoading] = useState(false);
   const [showSlowMsg, setShowSlowMsg] = useState(false);
+  const [error, setError] = useState("");
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     setLoading(true);
     setShowSlowMsg(false);
+    setError("");
 
     const timer = setTimeout(() => {
       setShowSlowMsg(true);
     }, 6000);
 
     try {
-      const data = await registerUser({
+      await registerUser({
         name,
         email,
         password,
@@ -35,13 +37,23 @@ export default function RegisterPage() {
       router.push("/login");
     } catch (error) {
       console.error(error);
-      alert("Registration failed");
+      setError("Registration failed. Try again.");
     } finally {
       clearTimeout(timer);
       setLoading(false);
       setShowSlowMsg(false);
     }
   };
+
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        setError("");
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
 
   return (
     <div className="min-h-screen grid md:grid-cols-2">
@@ -112,6 +124,12 @@ export default function RegisterPage() {
             value={organizationName}
             onChange={(e) => setOrganizationName(e.target.value)}
           />
+
+          {error && (
+            <div className="bg-red-500/20 border border-red-500 text-red-400 p-3 rounded mb-4 text-center">
+              {error}
+            </div>
+          )}
 
           <button
             type="submit"
