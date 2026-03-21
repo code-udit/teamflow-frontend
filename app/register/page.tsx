@@ -11,8 +11,18 @@ export default function RegisterPage() {
   const [organizationName, setOrganizationName] = useState<string>("");
   const router = useRouter();
 
+  const [loading, setLoading] = useState(false);
+  const [showSlowMsg, setShowSlowMsg] = useState(false);
+
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    setLoading(true);
+    setShowSlowMsg(false);
+
+    const timer = setTimeout(() => {
+      setShowSlowMsg(true);
+    }, 6000);
 
     try {
       const data = await registerUser({
@@ -22,23 +32,33 @@ export default function RegisterPage() {
         organizationName,
       });
 
-      console.log("Register success:", data);
       router.push("/login");
     } catch (error) {
       console.error(error);
       alert("Registration failed");
+    } finally {
+      clearTimeout(timer);
+      setLoading(false);
+      setShowSlowMsg(false);
     }
   };
 
   return (
     <div className="min-h-screen grid md:grid-cols-2">
+
+      {showSlowMsg && (
+        <div className="fixed top-6 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white border border-gray-700 px-6 py-3 rounded-lg shadow-lg z-50">
+          Backend is waking up… this may take up to 20 seconds
+        </div>
+      )}
+
       <button
         onClick={() => (window.location.href = "/")}
         className="absolute top-6 left-6 text-white border border-white px-4 py-2 rounded-lg hover:bg-white hover:text-blue-600 transition"
       >
         Home
       </button>
-      {/* Left Branding Section */}
+
       <div className="hidden md:flex flex-col justify-center items-center bg-gradient-to-br from-blue-600 to-indigo-800 text-white p-12">
         <h1 className="text-4xl font-bold mb-6">Welcome to TeamFlow</h1>
 
@@ -54,7 +74,6 @@ export default function RegisterPage() {
         </div>
       </div>
 
-      {/* Right Register Form */}
       <div className="flex items-center justify-center bg-black">
         <form
           onSubmit={handleRegister}
@@ -96,7 +115,8 @@ export default function RegisterPage() {
 
           <button
             type="submit"
-            className="bg-green-500 text-white w-full p-2 rounded"
+            disabled={loading}
+            className="bg-green-500 text-white w-full p-2 rounded transition active:scale-95 active:bg-green-600 disabled:opacity-60"
           >
             Register
           </button>
