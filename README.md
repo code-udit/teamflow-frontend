@@ -1,5 +1,9 @@
 # TeamFlow Frontend
 
+### 👨‍💻 Developed By
+
+**Udit U Gunagi**
+
 A modern project and task management platform built with Next.js, TypeScript, Tailwind CSS, and Axios that helps teams organize projects, manage tasks, and collaborate efficiently through a centralized dashboard.
 
 ---
